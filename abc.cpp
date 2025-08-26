@@ -2,49 +2,43 @@
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
-#define epsilon 0.000001
+#include "Tests.h"
+#include "CompareStrAndNumbers.h"
 
-struct calc
+
+int main(int argc, const char* argv[])
 {
-    double a;
-    double b;
-    double c;
-    double x1;
-    double x2;
-    int count;
-};
-int SolveLinear(double b, double c, double* x1, double* x2);
-int SolveQuadratic(double a, double b, double c, double *x1, double *x2);
-bool ScanCoaff(double *a, double *b, double *c);
-bool TestSolve();
-bool Compare(double FirstNumber, double SecondNumber);
-//---------------------------------
-int main()
-{
-    if (TestSolve())
+    if (argc == 2 && CompareStr(argv[1], "-t"))
     {
-        double a=0, b=0, c=0, x1=0, x2=0;
-        int count=0;
-        if (ScanCoaff(&a, &b, &c) == true)
+        if (!TestSolve())
         {
-            count = SolveQuadratic(a, b, c, &x1, &x2);
-            printf("korni: %lg, %lg kolvo korney: %d", x1 ,x2, count);
-            return 0;
+            return 1;
         }
-        return 1;
+    }
+    double a=0, b=0, c=0, x1=0, x2=0;
+    int count=0;
+    if (ScanCoaff(&a, &b, &c) == true)
+    {
+        count = SolveQuadratic(a, b, c, &x1, &x2);
+        printf("korni: %lg, %lg kolvo korney: %d\n", x1 ,x2, count);
+        return 0;
+
     }
     return 1;
+
 }
-//------------------------------------
-bool Compare(double FirstNumber, double SecondNumber)
-{
-    if (abs(FirstNumber - SecondNumber) < epsilon)//если 1 число == 2 число
-    {
-        return true;
-    }
-        return false;
-}
-//------------------------------------
+
+// //! Правильное сравнивание чисел под С------------------------------------
+// bool Compare(double FirstNumber, double SecondNumber)
+// {
+//     if (abs(FirstNumber - SecondNumber) < epsilon)//если 1 число == 2 число
+//     {
+//         return true;
+//     }
+//         return false;
+// }
+
+//Решение линейного уравнения (a = 0)------------------------------------
 int SolveLinear(double b, double c, double* x1, double* x2)
 {
     if (Compare(b, 0.0))
@@ -66,7 +60,8 @@ int SolveLinear(double b, double c, double* x1, double* x2)
         return 1;
     }
 }
-//-------------------------------------------
+
+//Скан и проверка правильного ввода (не принимает ввод строк)-------------------------------------------
 bool ScanCoaff(double *a, double *b, double *c)
 {
     int r=2;
@@ -86,7 +81,8 @@ bool ScanCoaff(double *a, double *b, double *c)
     printf("a = %lg, b = %lg, c = %lg\n", *a, *b, *c);
     return true;
 }
-//-----------------------------------------------------
+
+//Решение квадратного уравнения (a != 0)-----------------------------------------------------
 int SolveQuadratic(double a, double b, double c, double *x1, double *x2)
 {
     assert(x1 != NULL);
@@ -121,31 +117,18 @@ int SolveQuadratic(double a, double b, double c, double *x1, double *x2)
         }
     }
 }
-//a b c x1 x2 count
-//1 -3 2 1 2 2
-//1 -6 5 1 5 2
-bool TestSolve()
-{
-    double x1 = 0, x2 = 0;
-    struct calc test[6] =
-    {
-        {1, -3, 2, 2, 1, 2},   // Первый набор
-        {2, -6, 5, 0, 0, 0},   // Второй набор
-        {0, 0, 0, 0, 0, -1},   // Третий набор !!!! <- ошибка но ее не выдает
-        {0, 0, 1, 0, 0, 0},    // Четвертый набор
-        {1, 2, 1, -1, -1, 1},  // Пятый набор
-        {0, -2, 4, 2, 2, 1},   // Шестой набор
-    };
-    for(int i=0; i<6; i++)
-    {
-        int count = SolveQuadratic(test[i].a, test[i].b, test[i].c, &x1, &x2);
-        printf("%lg, %lg, %lg, %lg, %lg, %d\n", test[i].a, test[i].b, test[i].c, x1, x2, count);
-        if (!(Compare(test[i].count, count) && Compare(test[i].x1, x1) && Compare(test[i].x2, x2)))
-        {
-            printf("FAILD: korni: x1 = %lg, x2 = %lg, count = %d (should be x1 = %lg, x2 = %lg, count = %d)\n", x1, x2, count, test[i].x1, test[i].x2, test[i].count);
-            return false;
 
-        }
-    }
-    return true;
-}
+// //Сравнивание строк-------------------------------
+// bool CompareStr(const char* Stroka1, const char* Stroka2)
+// {
+//     int q = 0;
+//     while(Stroka1[q] != '\0')
+//     {
+//         if (*(Stroka1 + q) != *(Stroka2 + q))
+//         {
+//             return false;
+//         }
+//         q +=1;
+//     }
+//     return true;
+// }
