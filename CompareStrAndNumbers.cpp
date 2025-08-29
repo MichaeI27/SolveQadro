@@ -1,26 +1,41 @@
+#include <assert.h>
 #include <math.h>
 #include "CompareStrAndNumbers.h"
-#define epsilon 0.000001
+
+static const double EPSILON = 1e-6;
 
 
+//! Сравнение 2ух чисел
+//! Вводимые значения: 2 числа
+//! @return Сравнимы числа или нет
+//! @retval true если числа сравнимы
+//! @retval false если числа не сравнимы
 
-//! Правильное сравнивание чисел под С------------------------------------
 bool Compare(double FirstNumber, double SecondNumber)
 {
-    if (abs(FirstNumber - SecondNumber) < epsilon)//если 1 число == 2 число
+    assert(!isinf(FirstNumber) && !isnan(FirstNumber));
+    assert(!isinf(SecondNumber) && !isnan(SecondNumber));
+    if (abs(FirstNumber - SecondNumber) < EPSILON)
     {
         return true;
     }
         return false;
 }
 
-//Сравнивание строк-------------------------------
-bool CompareStr(const char* Stroka1, const char* Stroka2)
+//! Сравнение 2ух строк
+//! Вводимые значения: 2 строки
+//! @return Сравнимы строки или нет
+//! @retval true если строки сравнимы
+//! @retval false если строки не сравнимы
+
+bool CompareStr(const char* Str1, const char* Str2)
 {
+    assert(Str1 != NULL);
+    assert(Str2 != NULL);
     int q = 0;
-    while(Stroka1[q] != '\0')
+    while(Str1[q] != '\0')
     {
-        if (*(Stroka1 + q) != *(Stroka2 + q))
+        if (*(Str1 + q) != *(Str2 + q))
         {
             return false;
         }

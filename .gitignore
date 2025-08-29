@@ -2,3 +2,5 @@ TXLib.h
 a.exe
 .vscode
 compile.bat
+html
+*.o
